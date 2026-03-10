@@ -1,0 +1,754 @@
+﻿[
+{
+  "id": "document_uuid",
+  "name": "Document UUID",
+ 
+  "type": "Text ",
+  "description": "A globally unique, immutable identifier assigned to a specific invoice document instance at the time of creation or ingestion. This identifier ensures end-to-end traceability across ERP systems, tax engines, EDI platforms, procurement systems, accounts payable automation tools, and regulatory reporting frameworks. It serves as the primary technical reference key for audit trails, document lifecycle tracking, cross-border reconciliation, fraud prevention, deduplication controls, and system interoperability in multi-entity and multi-country B2B environments.",
+  "guideline": "Must conform to RFC 4122 UUID v4 format . The value must be system-generated and cryptographically random. It must remain immutable throughout the document lifecycle, including revisions, resubmissions, and archival. The UUID must be unique across all legal entities, business units, and jurisdictions within the organization’s global ecosystem. Reuse across documents is strictly prohibited. This identifier must not encode business meaning or country-specific logic. It should be stored as the primary technical key in databases and used for API integrations, digital signatures, blockchain anchoring , and audit log correlation.",
+  "multiple": false
+},
+ {
+  "id": "document_type",
+  "name": "Document Type",
+ 
+  "type": "Text ",
+  "description": "The formal legal and commercial classification of the billing document within a B2B transaction context. This field defines the regulatory nature, accounting treatment, tax implication, and lifecycle behavior of the document across jurisdictions. It determines whether the document creates a tax liability, adjusts a previously issued invoice, serves as a commercial export declaration, represents a non-binding quotation, or functions as a legally enforceable request for payment. The document type drives validation rules, tax reporting logic, ERP posting behavior, compliance workflows, and government clearance requirements in domestic and cross-border trade environments.",
+  "guideline": "Must conform to a standardized, controlled vocabulary aligned with international trade and accounting practices. Recommended to map to ISO 20022, UN/CEFACT, PEPPOL BIS, or other recognized global e-invoicing standards where applicable. The selected value must be consistent with the country_of_issue statutory framework and the applicable tax regime . The document_type must determine downstream processing rules including tax calculation logic, reversal behavior, accounting impact , reporting obligations, and digital signature requirements. Custom or free-text values are prohibited in production systems; enumeration must be centrally governed to ensure interoperability across ERP, EDI, tax engines, and cross-border compliance platforms. Changes to document_type after issuance must trigger audit logging and version control mechanisms.",
+  "multiple": false
+},
+{
+  "id": "invoice_type_code",
+  "name": "Invoice Type Code",
+ 
+  "type": "Text ",
+  "description": "A standardized, machine-readable classification code that formally identifies the legal and regulatory nature of the invoice document in a globally interoperable format. This field enables structured data exchange across ERP systems, EDI platforms, tax engines, PEPPOL networks, customs systems, clearance-model e-invoicing regimes, and cross-border trade environments. The invoice_type_code determines the fiscal treatment, accounting impact, reporting obligations, validation logic, and lifecycle behavior of the document. It ensures semantic consistency across jurisdictions by mapping business document classifications to internationally recognized coding frameworks, thereby supporting automated compliance, digital signature validation, audit traceability, and government reporting interoperability.",
+  "guideline": "Must align with internationally recognized code lists such as UN/CEFACT UNCL 1001  or other jurisdiction-mandated official code lists . The selected code must be validated against the applicable country_of_issue regulatory framework and must be consistent with document_type. Where local regulations require a country-specific code , a mapping layer must be maintained between the global standard code and the local regulatory code. Free-text values are strictly prohibited. The code list must be centrally governed, version-controlled, and regularly updated to reflect international standard revisions. Changes to invoice_type_code after issuance must trigger audit logging and document version control. The code must drive downstream automation including tax determination logic, GL posting rules, reporting classification, and digital archival categorization.",
+  "multiple": false
+},
+  {
+  "id": "invoice_number",
+  "name": "Invoice Number",
+ 
+  "type": "Text ",
+  "description": "The official, legally enforceable commercial reference number assigned by the seller to uniquely identify the invoice within an authorized numbering series. This identifier represents the fiscal document number under applicable accounting and tax regulations and serves as the primary business reference for buyers, tax authorities, auditors, financial institutions, customs agencies, and enterprise resource planning  systems. The invoice_number supports transaction traceability, payment reconciliation, audit verification, statutory reporting, and cross-border compliance. In multinational environments, the numbering structure may incorporate controlled prefixes or segments to denote legal entity, branch, fiscal year, transaction type, or system origin, provided such structuring complies with applicable jurisdictional requirements.",
+  "guideline": "Must be unique within the seller’s legal entity and designated numbering series. The numbering sequence must comply with the statutory requirements of country_of_issue, including rules related to chronological issuance, continuity, sequential integrity, and non-duplication. Systems must enforce duplicate prevention controls and maintain audit logs for any voided, cancelled, or skipped numbers, where gaps are legally regulated. The invoice_number must remain immutable after issuance; corrections must be executed through legally recognized adjustment documents  rather than renumbering. In multi-entity or multi-branch organizations, numbering series must be formally governed and documented. Reuse of invoice numbers across fiscal periods or entities must only occur where legally permitted and must remain traceable. The field must support interoperability across ERP systems, e-invoicing platforms, EDI integrations, and government clearance frameworks.",
+  "multiple": false
+},
+  {
+  "id": "invoice_date",
+  "name": "Invoice Date",
+ 
+  "type": "Date ",
+  "description": "The official date on which the invoice is formally issued by the seller and becomes a legally recognizable fiscal document. This date establishes the document’s legal existence for accounting recognition, tax determination, regulatory reporting, contractual enforcement, and audit purposes. In cross-border B2B transactions, the invoice_date is used to determine the applicable tax period, exchange rate reference date , payment term calculation baseline, statutory reporting timeline, and compliance validation within clearance or real-time e-invoicing regimes. The invoice_date may differ from supply date, delivery date, service completion date, or tax point date, depending on jurisdictional rules and contractual arrangements.",
+  "guideline": "Must be expressed in ISO 8601 date format  and represent the seller’s official issuance date as recorded in the originating system. The invoice_date must comply with country_of_issue statutory rules, including restrictions on backdating, future dating, or post-period issuance. Where regulations define specific tax point rules , systems must validate consistency between invoice_date and related transaction dates. The invoice_date must remain immutable after issuance and must align with the sequential invoice numbering logic. In clearance-model jurisdictions, the invoice_date must correspond with the government authorization timestamp where required. Time zone considerations must be governed by the seller’s registered place of business or legally mandated reporting zone. Any correction to the invoice_date after issuance must trigger formal audit logging and version control.",
+  "multiple": false
+},
+ 
+{
+  "id": "due_date",
+  "name": "Invoice Due Date",
+ 
+  "type": "Date ",
+  "description": "The legally enforceable payment deadline by which the buyer is contractually obligated to remit full or partial payment for the invoiced goods or services. The due_date represents the maturity date of the financial obligation arising from the invoice and is used for payment scheduling, accounts receivable aging, working capital management, credit control, dispute monitoring, and cash flow forecasting. In cross-border B2B transactions, this field may also influence interest calculation, statutory late-payment penalties, supply chain financing eligibility, factoring arrangements, and contractual compliance under trade agreements.",
+  "guideline": "Must be expressed in ISO 8601 date format . The due_date must be deterministically derived from the agreed payment_terms, contract provisions, or statutory requirements applicable to country_of_issue and governing law of the contract. Systems must ensure logical consistency such that due_date is on or after invoice_date. Where regulations impose maximum payment periods , due_date must not exceed legally permitted timelines. Any early payment discount conditions, installment arrangements, milestone-based schedules, or advance payment structures must be explicitly governed through structured payment_terms logic. The due_date must remain immutable after issuance unless formally amended through a contractually valid revision or credit/debit adjustment process, with full audit logging and version control. Time zone governance must align with the seller’s registered place of business or governing contractual jurisdiction.",
+  "multiple": false
+},
+{
+  "id": "invoice_reference_details",
+  "name": "Invoice Reference Details",
+ 
+  "type": "Nested object",
+  "description": "A structured container holding references to upstream commercial, contractual, logistical, and supply-chain documents that govern, authorize, or evidence the underlying transaction. This object enables end-to-end traceability across procurement systems, ERP platforms, tax engines, logistics documentation, and regulatory reporting frameworks. It supports automated three-way matching, contractual compliance validation, revenue recognition controls, supply chain reconciliation, and audit reconstruction across domestic and cross-border B2B transactions.",
+  "guideline": "Must maintain referential integrity with source documents issued by the buyer, seller, or logistics providers. All references must be system-validated where integration exists . The structure must support interoperability with global standards such as UN/CEFACT, PEPPOL BIS, and ISO 20022. Where statutory requirements mandate reference linkage , the relevant subfields become mandatory. All referenced identifiers must remain immutable and auditable. Multiple references should be supported in enterprise environments where invoices consolidate multiple POs, deliveries, or contract milestones.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "purchase_order_number",
+      "name": "Purchase Order Number",
+     
+      "type": "Text",
+      "description": "The unique procurement authorization reference issued by the buyer that formally approves the purchase of goods or services. This reference establishes the commercial basis for the invoice and enables automated three-way matching between purchase order, goods receipt , and invoice.",
+      "guideline": "Must exactly match the buyer-issued purchase order identifier. Required in PO-based procurement environments. Systems must validate consistency with buyer master data where integration exists. In consolidated invoices, multiple PO references must be supported. Any mismatch must trigger reconciliation or dispute workflow controls.",
+      "multiple": false
+    },
+    {
+      "id": "contract_reference",
+      "name": "Contract Reference",
+     
+      "type": "Text",
+      "description": "Reference to the governing master agreement, service contract, framework agreement, or legally binding commercial arrangement under which the invoice is issued. This field links the invoice to pricing terms, service levels, billing milestones, penalties, and contractual payment terms.",
+      "guideline": "Mandatory where billing is contract-driven . Must correspond to a legally valid and active contract. Systems should enforce version alignment where contract amendments exist.",
+      "multiple": false
+    },
+    {
+      "id": "delivery_note_number",
+      "name": "Delivery Note Number",
+     
+      "type": "Text",
+      "description": "Reference to the dispatch, shipment, or goods receipt document evidencing the physical delivery of goods. This reference supports logistics traceability, customs documentation alignment, and goods receipt validation in goods-based transactions.",
+      "guideline": "Mandatory for goods-based invoices where physical delivery documentation is legally or operationally required. Must align with logistics or warehouse management system records. In cross-border trade, this reference may correspond to shipping documents, airway bills, or customs declarations where applicable.",
+      "multiple": false
+    },
+    {
+      "id": "supply_date",
+      "name": "Supply Date",
+     
+      "type": "Date",
+      "description": "The date on which goods were delivered or services were rendered. This date may determine tax liability , revenue recognition timing, and statutory reporting period depending on jurisdictional regulations.",
+      "guideline": "Must be expressed in ISO 8601 format . Required where tax regulations differentiate between invoice issuance date and supply date. Must not conflict with invoice_date. In milestone or recurring billing models, supply_date may represent a service period start or end date and should align with contractual terms.",
+      "multiple": false
+    }
+  ]
+},
+  {
+  "id": "country_of_issue",
+  "name": "Country of Issue",
+ 
+  "type": "Text ",
+  "description": "The ISO-standardized country code representing the sovereign jurisdiction under whose legal, tax, and regulatory framework the invoice is formally issued. This field determines the applicable statutory requirements governing invoice formatting, tax calculation methodology, reporting obligations, digital signature mandates, e-invoicing clearance requirements, archival rules, and audit compliance. In multinational B2B transactions, the country_of_issue establishes the primary fiscal jurisdiction responsible for the legal recognition and enforcement of the invoice as an accounting and tax document.",
+  "guideline": "Must use the ISO 3166-1 alpha-2 two-letter country code . The value must correspond to the seller’s legally registered place of business responsible for issuing the invoice, unless otherwise governed by specific tax registration rules . Systems must validate that country_of_issue aligns with seller tax registration details, VAT/GST identification numbers, and applicable invoice numbering series. This field drives downstream regulatory validation logic including tax regime selection, invoice content rules, clearance-model integration, and reporting schema mapping. Free-text country names are prohibited in structured data exchange. Changes to country_of_issue after issuance are strictly prohibited and must require document cancellation and reissuance under proper governance controls."
+},
+{
+  "id": "invoice_currency",
+  "name": "Invoice Currency",
+ 
+  "type": "Text ",
+  "description": "The ISO-standardized three-letter currency code representing the monetary unit in which the invoice amounts are denominated. This field defines the transaction currency used for line item pricing, tax calculation, total invoice amount determination, and contractual payment obligation. In multinational B2B transactions, the invoice_currency governs foreign exchange exposure, accounting conversion treatment, statutory reporting currency reconciliation, treasury settlement instructions, and cross-border trade compliance requirements.",
+  "guideline": "Must use ISO 4217 three-letter currency codes . The selected currency must comply with contractual agreements between buyer and seller and, where applicable, with country_of_issue regulatory restrictions on foreign currency invoicing. Systems must enforce consistency between invoice_currency and all monetary fields within the document. In cross-border transactions, if the tax reporting currency differs from the invoice_currency, an exchange rate reference and conversion logic must be documented in accordance with statutory rules. Free-text currency names or symbols are prohibited in structured data exchange. Changes to invoice_currency after issuance are strictly prohibited and require formal cancellation and reissuance of the invoice."
+},
+{
+  "id": "currency_exchange_details",
+  "name": "Currency Exchange Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object capturing the foreign exchange parameters applied when the invoice_currency differs from the seller’s functional, reporting, or statutory tax currency. This object ensures transparency and audit traceability of currency conversion methodology used for accounting recognition, tax reporting, statutory compliance, consolidation, treasury settlement, and cross-border financial controls. It enables standardized FX governance across multinational ERP systems, tax engines, and regulatory reporting frameworks.",
+  "guideline": "Mandatory when invoice_currency differs from the seller’s functional or statutory reporting currency, or where local regulations require tax reporting in domestic currency. All values must be derived from an authorized exchange rate source in accordance with contractual terms and country_of_issue statutory requirements. Systems must maintain full audit logging of exchange rate origin, calculation methodology, and conversion logic. Any post-issuance modification to exchange rate data is strictly prohibited and requires formal document cancellation and reissuance.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "base_currency",
+      "name": "Base Currency",
+     
+      "type": "Text",
+      "description": "The seller’s functional, statutory reporting, or tax declaration currency against which the invoice_currency is converted for accounting, tax compliance, and financial reporting purposes.",
+      "guideline": "Must use ISO 4217 three-letter currency code . The base_currency must correspond to the seller’s legally registered accounting or tax reporting currency under the applicable jurisdiction. Systems must validate consistency with financial master data and statutory configuration.",
+      "multiple": false
+    },
+    {
+      "id": "exchange_rate",
+      "name": "Exchange Rate",
+     
+      "type": "Number",
+      "description": "The numerical conversion rate applied to translate invoice_currency amounts into base_currency values for accounting, statutory reporting, and consolidation purposes.",
+      "guideline": "Must be expressed in decimal format with precision sufficient for statutory and accounting accuracy . The exchange rate must be sourced from an authorized provider such as central bank published rates, contractual agreed rates, or enterprise treasury systems, as governed by local regulations and contract terms. The conversion methodology  must comply with country_of_issue requirements.",
+      "multiple": false
+    },
+    {
+      "id": "exchange_rate_date",
+      "name": "Exchange Rate Date",
+     
+      "type": "Date",
+      "description": "The reference date on which the applied exchange rate was determined or published. This date establishes regulatory alignment for tax calculation, accounting recognition, and statutory reporting.",
+      "guideline": "Must use ISO 8601 format . The exchange_rate_date must comply with jurisdictional rules, which may require the rate applicable on the invoice_date, supply_date, tax_point_date, or official central bank publication date. Systems must enforce logical consistency between exchange_rate_date and related transaction dates.",
+      "multiple": false
+    }
+  ]
+},
+{
+  "id": "seller_details",
+  "name": "Seller Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object containing the complete legal, tax, and official contact identity of the entity issuing the invoice. This section establishes the seller’s legally recognized business identity under the applicable jurisdiction and forms the basis for tax liability determination, statutory compliance validation, contractual enforceability, regulatory reporting, and cross-border trade recognition. The seller_details object must represent the legally registered entity responsible for issuing the invoice and remitting applicable taxes.",
+  "guideline": "All information must align with official government business registration records, tax authority databases, and ERP master data configuration. Any mismatch between invoice data and statutory registration records may invalidate tax deductibility or regulatory compliance. The seller identity must correspond to the legal entity responsible for tax reporting in the country_of_issue. Changes to seller identity after issuance are strictly prohibited and require formal cancellation and reissuance under governance controls.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "seller_legal_name",
+      "name": "Seller Legal Name",
+     
+      "type": "Text",
+      "description": "The full, officially registered legal name of the seller entity as recorded in government corporate registration systems. This name establishes the legal identity of the invoicing party for contractual, tax, and regulatory purposes.",
+      "guideline": "Must exactly match the legal name registered with corporate authorities and tax administration. Trade names or brand names may only be included if legally permitted and must not replace the registered entity name.",
+      "multiple": false
+    },
+    {
+      "id": "seller_tax_registration_number",
+      "name": "Seller Tax Registration Number",
+     
+      "type": "Text",
+      "description": "The primary tax identification number assigned to the seller by the competent tax authority for corporate taxation or business registration purposes.",
+      "guideline": "Must comply with country_of_issue formatting rules and validation logic. This may include corporate tax ID, business registration number, or national enterprise number depending on jurisdiction. Systems should implement format validation controls.",
+      "multiple": false
+    },
+    {
+      "id": "seller_vat_gst_number",
+      "name": "Seller VAT/GST Number",
+     
+      "type": "Text",
+      "description": "The seller’s indirect tax registration number used for VAT, GST, sales tax, or similar consumption tax regimes. This identifier determines the seller’s authority to charge and remit indirect tax.",
+      "guideline": "Mandatory where the seller is registered for indirect tax in the country_of_issue. Must comply with jurisdiction-specific validation rules. In multi-registration scenarios, the VAT/GST number must correspond to the issuing branch or establishment.",
+      "multiple": false
+    },
+    {
+      "id": "seller_address",
+      "name": "Seller Address",
+     
+      "type": "Text",
+      "description": "The full registered business address of the seller’s legal entity or issuing establishment. This address establishes jurisdictional presence for tax, regulatory, and contractual purposes.",
+      "guideline": "Must include street name, building number, city, state/province/region, postal code, and country . Address must match official business registration records. Structured address components are strongly recommended over free-text format for interoperability.",
+      "multiple": false
+    },
+    {
+      "id": "seller_email",
+      "name": "Seller Email",
+     
+      "type": "Text",
+      "description": "Official electronic contact address of the seller used for commercial communication, dispute handling, and electronic document transmission.",
+      "guideline": "Must comply with RFC 5322 format standards. Should represent a monitored corporate domain email rather than a personal address.",
+      "multiple": false
+    },
+    {
+      "id": "seller_mobile_country_code",
+      "name": "Seller Mobile Country Code",
+     
+      "type": "Text",
+      "description": "International dialing prefix associated with the seller’s registered contact number.",
+      "guideline": "Must follow ITU E.164 format .",
+      "multiple": false
+    },
+    {
+      "id": "seller_mobile_number",
+      "name": "Seller Mobile Number",
+     
+      "type": "Text",
+      "description": "Official mobile contact number associated with the seller’s billing or accounts department.",
+      "guideline": "Must exclude country code if stored separately. Numeric characters only. Must comply with local telecommunications format rules.",
+      "multiple": false
+    },
+    {
+      "id": "seller_landline_number",
+      "name": "Seller Landline Number",
+     
+      "type": "Text",
+      "description": "Registered office landline number of the seller entity for formal business communication..",
+      "guideline": "Should include area or regional code where applicable. Must comply with telecommunications formatting standards.",
+      "multiple": false
+    }
+  ]
+},
+
+
+ {
+  "id": "seller_bank_details",
+  "name": "Seller Bank Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object containing the official banking coordinates of the seller for the purpose of receiving invoice payments. This object enables secure, compliant, and automated financial settlement across domestic and cross-border B2B transactions. It supports treasury execution, payment routing validation, sanctions screening, supply chain finance integration, and reconciliation processes within ERP, banking, and trade finance ecosystems.",
+  "guideline": "Mandatory when payment_method requires bank-based settlement . All banking information must correspond to officially registered bank records and must be governed by strict financial data protection controls, including encryption at rest and in transit. Sensitive banking identifiers must comply with international banking standards . Systems must implement fraud-prevention validation, change-management approval workflows, and audit logging for any updates to banking data. Post-issuance modification of settlement details must follow formal governance controls to mitigate payment diversion risk.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "seller_account_holder_name",
+      "name": "Account Holder Name",
+     
+      "type": "Text",
+      "description": "The official legal name of the account holder as registered with the financial institution. This name must correspond to the seller’s legally recognized entity or authorized payment beneficiary.",
+      "guideline": "Must exactly match the bank’s registered account holder records. Mismatches between seller legal entity name and account holder name must be governed by formal authorization documentation.",
+      "multiple": false
+    },
+    {
+      "id": "seller_bank_name",
+      "name": "Bank Name",
+     
+      "type": "Text",
+      "description": "The full official name of the financial institution maintaining the seller’s account.",
+      "guideline": "Must use the bank’s registered name without unofficial abbreviations unless legally recognized. Recommended to align with global financial institution registries.",
+      "multiple": false
+    },
+    {
+      "id": "seller_account_number",
+      "name": "Account Number",
+     
+      "type": "Text",
+      "description": "The domestic bank account number designated for receipt of invoice payments.",
+      "guideline": "Must be stored as text to preserve formatting and leading zeros. Classified as sensitive financial data and must be encrypted at rest and masked in user interfaces. Access must be role-based and audit logged.",
+      "multiple": false
+    },
+    {
+      "id": "seller_iban",
+      "name": "IBAN",
+     
+      "type": "Text",
+      "description": "The International Bank Account Number used to uniquely identify the seller’s bank account in cross-border transactions.",
+      "guideline": "Must comply with ISO 13616 format and country-specific IBAN structure validation. Mandatory for SEPA payments and required where cross-border transfers use IBAN standards. Systems must validate checksum correctness.",
+      "multiple": false
+    },
+    {
+      "id": "seller_swift_bic",
+      "name": "SWIFT/BIC Code",
+     
+      "type": "Text",
+      "description": "The Bank Identifier Code  used to identify the seller’s financial institution in international wire transfers via the SWIFT network.",
+      "guideline": "Must be 8 or 11 characters and conform to ISO 9362 structure. Required for cross-border wire transactions where applicable.",
+      "multiple": false
+    },
+    {
+      "id": "seller_bank_country",
+      "name": "Bank Country",
+     
+      "type": "Text",
+      "description": "The ISO-standardized country code representing the jurisdiction in which the seller’s bank account is maintained.",
+      "guideline": "Must use ISO 3166-1 alpha-2 codes . Must align with IBAN or domestic banking structure where applicable.",
+      "multiple": false
+    }
+  ]
+},
+
+
+  {
+  "id": "buyer_details",
+  "name": "Buyer Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object containing the complete legal, tax, and official contact identity of the buyer entity receiving the invoice. This object establishes the counterparty’s legally recognized business identity for contractual enforceability, tax determination, regulatory reporting, and cross-border compliance. In B2B environments, accurate buyer identification is essential for input tax credit eligibility, reverse charge validation, place-of-supply assessment, procurement reconciliation, and audit traceability.",
+  "guideline": "Mandatory for all B2B transactions. All buyer identity data must align with official government registration records, tax authority databases, and procurement master data systems. The buyer identity must correspond to the legally responsible entity obligated to remit payment and, where applicable, entitled to claim tax credits. Any discrepancy between invoice data and official registration records may invalidate tax deductibility or create compliance risk. Post-issuance modification of buyer legal identity must require formal credit/reissuance governance controls.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "buyer_legal_name",
+      "name": "Buyer Legal Name",
+     
+      "type": "Text",
+      "description": "The full, officially registered legal name of the buyer entity as recorded in corporate registration systems. This name establishes the contractual counterparty responsible for payment obligations and tax credit claims.",
+      "guideline": "Must exactly match the name registered with corporate authorities or procurement master data records. Trade names may be included only where legally permitted but must not replace the official registered entity name.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_tax_registration_number",
+      "name": "Buyer Tax Registration Number",
+     
+      "type": "Text",
+      "description": "The primary business or corporate tax identification number assigned to the buyer by the competent national authority.",
+      "guideline": "Must comply with country-specific format and validation logic. Required where statutory rules mandate disclosure of buyer tax identification for compliance or reporting.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_vat_gst_number",
+      "name": "Buyer VAT/GST Number",
+     
+      "type": "Text",
+      "description": "The buyer’s indirect tax registration number used for VAT, GST, or similar consumption tax regimes. This identifier is used to validate eligibility for input tax credit and determine reverse charge applicability.",
+      "guideline": "Mandatory in VAT/GST jurisdictions where input tax recovery is claimed. Must comply with jurisdiction-specific format validation. In cross-border transactions, this field may determine intra-community supply treatment or reverse charge mechanisms.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_address",
+      "name": "Buyer Address",
+     
+      "type": "Text",
+      "description": "The official registered business, billing, or place-of-supply address of the buyer. This address may influence tax jurisdiction, place-of-supply rules, and regulatory reporting.",
+      "guideline": "Must include street, city, state/province/region, postal code, and country . Structured address components are strongly recommended for interoperability. The address should align with official registration or procurement master records.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_email",
+      "name": "Buyer Email",
+     
+      "type": "Text",
+      "description": "Official electronic contact address of the buyer used for invoice receipt, dispute resolution, and commercial communication.",
+      "guideline": "Must comply with RFC 5322 formatting standards. Recommended to use a monitored corporate domain email.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_mobile_country_code",
+      "name": "Buyer Mobile Country Code",
+     
+      "type": "Text",
+      "description": "International dialing prefix associated with the buyer’s contact number.",
+      "guideline": "Must follow ITU E.164 format .",
+      "multiple": false
+    },
+    {
+      "id": "buyer_mobile_number",
+      "name": "Buyer Mobile Number",
+     
+      "type": "Text",
+      "description": "Official mobile contact number associated with the buyer’s accounts payable or procurement department.",
+      "guideline": "Numeric characters only; exclude country code if stored separately.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_landline_number",
+      "name": "Buyer Landline Number",
+     
+      "type": "Text",
+      "description": "Registered office landline contact number of the buyer entity.",
+      "guideline": "Should include regional or area code where applicable.",
+      "multiple": false
+    }
+  ]
+},
+{
+  "id": "buyer_bank_details",
+  "name": "Buyer Bank Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object containing the official banking coordinates of the buyer, used exclusively for refund processing, direct debit arrangements, escrow settlements, advance payment reversals, or other regulated financial return transactions. This object enables secure, compliant, and traceable financial settlement workflows across domestic and cross-border B2B environments. It supports treasury operations, automated refund execution, sanctions screening, AML controls, and reconciliation processes within ERP and banking ecosystems.",
+  "guideline": "Must only be captured when contractually or operationally required for refund, reversal, or direct debit workflows. All banking data must comply with applicable financial data protection laws, including encryption at rest and in transit, role-based access control, and audit logging of any modification. Sensitive financial identifiers must comply with international banking standards . Systems must enforce change-management approval workflows to mitigate payment diversion or fraud risk. Post-issuance updates to buyer bank details must require documented authorization and governance review.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "buyer_account_holder_name",
+      "name": "Account Holder Name",
+     
+      "type": "Text",
+      "description": "The official legal name of the buyer’s bank account holder as registered with the financial institution.",
+      "guideline": "Must exactly match bank records. Where the account holder differs from the buyer legal entity , formal authorization documentation must be maintained.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_bank_name",
+      "name": "Bank Name",
+     
+      "type": "Text",
+      "description": "The official registered name of the financial institution maintaining the buyer’s account.",
+      "guideline": "Must use the bank’s full registered name. Recommended alignment with recognized financial institution registries.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_account_number",
+      "name": "Account Number",
+     
+      "type": "Text",
+      "description": "The domestic bank account number designated for refund or direct debit settlement.",
+      "guideline": "Must be stored as text to preserve formatting and leading zeros. Classified as sensitive financial data requiring encryption, masking in UI, and strict role-based access controls.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_iban",
+      "name": "IBAN",
+     
+      "type": "Text",
+      "description": "International Bank Account Number uniquely identifying the buyer’s account in cross-border payment systems.",
+      "guideline": "Must comply with ISO 13616 format and country-specific structure validation. Mandatory for SEPA and applicable international transfer systems. Checksum validation recommended.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_swift_bic",
+      "name": "SWIFT/BIC Code",
+     
+      "type": "Text",
+      "description": "Bank Identifier Code used to identify the buyer’s financial institution in international wire transfers.",
+      "guideline": "Must be 8 or 11 characters and comply with ISO 9362 format. Required for cross-border refunds or international settlement instructions.",
+      "multiple": false
+    },
+    {
+      "id": "buyer_bank_country",
+      "name": "Bank Country",
+     
+      "type": "Text",
+      "description": "The ISO-standardized country code representing the jurisdiction where the buyer’s bank account is maintained.",
+      "guideline": "Must use ISO 3166-1 alpha-2 codes . Should align logically with IBAN structure where applicable.",
+      "multiple": false
+    }
+  ]
+},
+{
+  "id": "tax_compliance_details",
+  "name": "Tax Compliance Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object capturing jurisdiction-specific tax compliance parameters necessary for statutory reporting, tax liability determination, cross-border classification, and regulatory validation. This object enables standardized enforcement of indirect tax rules , reverse charge mechanisms, withholding obligations, exemption logic, and goods/service classification codes across multinational B2B transactions. It supports interoperability with tax engines, clearance-model e-invoicing systems, ERP compliance modules, and government reporting platforms.",
+  "guideline": "Mandatory for all tax-relevant invoices depending on country_of_issue statutory requirements. All values must align with applicable tax legislation, place-of-supply rules, cross-border trade regulations, and withholding tax provisions. Systems must implement validation logic consistent with tax regime configuration, including rate verification, exemption documentation requirements, and reverse charge applicability rules. Post-issuance modification of tax compliance parameters must require formal correction through credit/debit adjustment mechanisms.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "place_of_supply",
+      "name": "Place of Supply",
+     
+      "type": "Text",
+      "description": "The jurisdiction where goods or services are deemed supplied for tax determination purposes. This field governs tax rate selection, tax liability allocation, cross-border treatment, and regulatory reporting obligations.",
+      "guideline": "Mandatory in VAT/GST regimes where place-of-supply rules determine tax applicability. Must align with statutory definitions under country_of_issue regulations. Use ISO 3166-1 country codes and, where required, subnational region/state codes. Must be logically consistent with buyer_address, supply_date, and transaction type.",
+      "multiple": false
+    },
+    {
+      "id": "reverse_charge_applicable",
+      "name": "Reverse Charge Applicable",
+     
+      "type": "Boolean",
+      "description": "Indicates whether tax liability is shifted from the seller to the buyer under reverse charge mechanisms applicable in certain domestic or cross-border transactions.",
+      "guideline": "Must be strictly True or False. When True, tax amount calculation rules must reflect zero tax charged by seller while indicating buyer self-assessment responsibility. Reverse charge applicability must comply with jurisdictional tax rules and buyer tax registration status.",
+      "multiple": false
+    },
+    {
+      "id": "withholding_tax_amount",
+      "name": "Withholding Tax Amount",
+     
+      "type": "Number",
+      "description": "The monetary amount of tax withheld at source by the buyer as required under applicable withholding tax or retention tax regulations.",
+      "guideline": "Must align with statutory withholding rates defined by governing tax laws. Calculation methodology must be documented and auditable. If applicable, withholding tax certificate or reference number should be maintained in related documentation.",
+      "multiple": false
+    },
+    {
+      "id": "tax_exemption_reason",
+      "name": "Tax Exemption Reason",
+     
+      "type": "Text",
+      "description": "The legally defined reason for exemption from indirect tax, zero-rating, or reduced-rate application under applicable tax legislation.",
+      "guideline": "Must reference applicable statutory provision, directive, or regulatory code. Free-text entries are discouraged; controlled exemption codes aligned with jurisdictional tax authority guidelines are recommended. Supporting documentation may be required for audit purposes.",
+      "multiple": false
+    },
+    {
+      "id": "hsn_sac_code",
+      "name": "HSN/SAC Code",
+     
+      "type": "Text",
+      "description": "The internationally recognized or jurisdiction-specific goods or services classification code used to determine tax rates, customs duties, and regulatory reporting categories.",
+      "guideline": "Must align with applicable harmonized classification systems . Mandatory in jurisdictions requiring classification disclosure. Format must comply with country-specific digit structure requirements.",
+      "multiple": false
+    }
+  ]
+},
+{
+  "id": "logistics_export_details",
+  "name": "Logistics and Export Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object capturing logistics, export control, and customs-related information required for cross-border commercial transactions. This object supports international trade compliance, customs declaration validation, tariff classification, free trade agreement eligibility, and alignment with global shipping and trade finance documentation requirements. It enables interoperability with customs systems, freight forwarders, ERP trade compliance modules, and government export reporting frameworks.",
+  "guideline": "Mandatory for cross-border commercial invoices involving physical goods. All data must align with applicable customs regulations, export control laws, and international trade agreements. Values must be consistent with shipping documentation , customs filings, and export declarations. Post-issuance changes must follow documented amendment procedures compliant with customs and trade regulations.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "incoterms",
+      "name": "Incoterms",
+     
+      "type": "Text",
+      "description": "The standardized International Commercial Term defining the allocation of delivery responsibilities, risk transfer, cost obligations, and customs clearance duties between seller and buyer in an international trade transaction.",
+      "guideline": "Must use officially published Incoterms rules . The selected term must correspond to the contract of sale and align with logistics documentation. The Incoterms version year  should be specified in contractual documentation. Incorrect Incoterm selection may result in customs disputes, liability misallocation, or insurance coverage gaps.",
+      "multiple": false
+    },
+    {
+      "id": "export_declaration_number",
+      "name": "Export Declaration Number",
+     
+      "type": "Text",
+      "description": "The official customs export declaration reference number assigned by the exporting country’s customs authority. This identifier evidences regulatory authorization for export of goods and supports customs clearance tracking.",
+      "guideline": "Mandatory where customs regulations require export declaration filing. Must match the reference submitted in the national customs system. Systems should validate format based on exporting country requirements. Any amendments must comply with customs correction procedures.",
+      "multiple": false
+    },
+    {
+      "id": "country_of_origin",
+      "name": "Country of Origin",
+     
+      "type": "Text",
+      "description": "The ISO-standardized country code representing the country where the goods were manufactured, produced, or substantially transformed for customs and tariff determination purposes.",
+      "guideline": "Must use ISO 3166-1 alpha-2 country codes . The declared origin must comply with applicable rules of origin under customs law or free trade agreements. Misrepresentation may result in customs penalties or tariff reassessment.",
+      "multiple": false
+    }
+  ]
+},
+  {
+  "id": "line_items",
+  "name": "Invoice Line Items",
+ 
+  "type": "Nested object",
+  "description": "An itemized structured breakdown representing each distinct good, service, milestone, subscription period, or charge component billed under the invoice. Each line item constitutes an independent commercial transaction unit for pricing, taxation, accounting recognition, customs valuation, and procurement reconciliation purposes. In multinational B2B environments, line-level granularity is critical for accurate tax determination, regulatory compliance, revenue recognition, cost allocation, transfer pricing documentation, and audit traceability.",
+  "guideline": "At least one line item is mandatory. Each entry must represent a distinct product, service, or billing component and must be independently identifiable. All monetary values must be expressed in invoice_currency. Systems must enforce arithmetic validation consistency across quantity, pricing, tax calculation, and line totals. Line-level tax determination must comply with applicable country_of_issue statutory requirements. Post-issuance modification must require formal credit/debit adjustment mechanisms.",
+  "multiple": true,
+  "subFields": [
+    {
+      "id": "line_item_description",
+      "name": "Line Item Description",
+     
+      "type": "Text",
+      "description": "A clear and commercially precise description of the product, service, or billing component supplied. The description must enable independent identification for accounting, tax, customs, and contractual validation purposes.",
+      "guideline": "Must be sufficiently detailed to determine nature of supply, tax classification, and contractual scope. Generic descriptions  should be avoided unless supported by contract references. Where required by regulation, description must align with classification codes .",
+      "multiple": false
+    },
+    {
+      "id": "line_item_quantity",
+      "name": "Quantity",
+     
+      "type": "Number",
+      "description": "The measurable quantity of goods delivered or service units billed under this line item.",
+      "guideline": "Must be a positive numeric value. Decimal precision allowed where applicable . Unit of measure should be standardized where possible . Quantity must align with delivery or service confirmation records.",
+      "multiple": false
+    },
+    {
+      "id": "line_item_unit_price",
+      "name": "Unit Price",
+     
+      "type": "Number",
+      "description": "The agreed price per unit of the product or service before tax and before line-level discounts, unless contractually defined otherwise.",
+      "guideline": "Must be expressed in invoice_currency. Decimal precision should support statutory rounding rules . Unit price must align with purchase order, contract pricing terms, or approved rate cards.",
+      "multiple": false
+    },
+    {
+      "id": "line_item_tax_rate",
+      "name": "Tax Rate",
+     
+      "type": "Number",
+      "description": "The applicable indirect tax percentage applied to this specific line item under the governing tax regime.",
+      "guideline": "Expressed as percentage value . Must comply with statutory tax classification rules based on product/service type, place_of_supply, and buyer tax status. Zero or reduced rates must be supported by tax_exemption_reason where applicable.",
+      "multiple": false
+    },
+    {
+      "id": "line_item_tax_amount",
+      "name": "Tax Amount",
+     
+      "type": "Number",
+      "description": "The calculated monetary value of tax applied to the line item based on taxable amount and applicable rate.",
+      "guideline": "Must equal , subject to statutory rounding rules. Must reconcile with tax_breakup and invoice-level tax totals. Systems must enforce mathematical validation.",
+      "multiple": false
+    },
+    {
+      "id": "line_item_total",
+      "name": "Line Item Total",
+     
+      "type": "Number",
+      "description": "The total payable amount for the line item inclusive of applicable tax and exclusive of invoice-level adjustments unless otherwise specified.",
+      "guideline": "Must equal  + line_item_tax_amount. Must reconcile with invoice subtotal and grand total calculations. Rounding methodology must follow jurisdictional accounting standards.",
+      "multiple": false
+    }
+  ]
+},
+
+
+ {
+  "id": "tax_breakup",
+  "name": "Tax Breakdown",
+ 
+  "type": "Nested object",
+  "description": "A structured aggregation of all tax components applied to the invoice, categorized by tax type, jurisdiction, and applicable rate. This object summarizes invoice-level indirect and direct tax liabilities, including VAT, GST, Sales Tax, Withholding Tax, environmental levies, digital service taxes, and other statutory charges. It supports regulatory reporting, tax return preparation, ERP tax engine reconciliation, clearance-model validation, and cross-border compliance in multinational B2B transactions.",
+  "guideline": "Multiple entries are allowed and required where multiple tax categories or rates apply. Each entry must represent a distinct tax category or statutory charge. The sum of all tax_amount values must reconcile with total_tax_amount at invoice summary level. All tax rates and amounts must comply with applicable country_of_issue regulations and be consistent with line-level tax calculations. Post-issuance modifications must require formal credit/debit adjustment processes.",
+  "multiple": true,
+  "subFields": [
+    {
+      "id": "tax_type",
+      "name": "Tax Type",
+     
+      "type": "Text",
+      "description": "The classification label identifying the statutory nature of the tax component applied to the invoice. This may represent national, regional, state, municipal, or international tax obligations.",
+      "guideline": "Must align with country-recognized tax categories . Use controlled vocabulary mapped to tax authority reporting codes where possible. Free-text entries should be avoided in structured integrations.",
+      "multiple": false
+    },
+    {
+      "id": "tax_rate",
+      "name": "Tax Rate",
+     
+      "type": "Number",
+      "description": "The statutory percentage rate applied to the taxable base for this specific tax category.",
+      "guideline": "Express as percentage value . Must comply with applicable tax laws for the jurisdiction determined by country_of_issue and place_of_supply. Zero or reduced rates must be supported by tax_exemption_reason in tax_compliance_details.",
+      "multiple": false
+    },
+    {
+      "id": "tax_amount",
+      "name": "Tax Amount",
+     
+      "type": "Number",
+      "description": "The total monetary value of tax calculated for the specific tax category at invoice level.",
+      "guideline": "Must equal the sum of corresponding line-level tax amounts for that tax category. Decimal precision must comply with statutory rounding rules. Sum of all tax_amount values across tax_breakup must equal total_tax_amount in invoice summary.",
+      "multiple": false
+    }
+  ]
+},
+{
+  "id": "subtotal",
+  "name": "Subtotal",
+ 
+  "type": "Number ",
+  "description": "The aggregate net monetary value of all invoice line items prior to the application of taxes, invoice-level discounts, surcharges, freight, insurance, withholding adjustments, or other fiscal modifiers. The subtotal represents the primary taxable base in most indirect tax regimes and forms the foundational amount for statutory tax calculation, revenue recognition, transfer pricing analysis, and customs valuation where applicable.",
+  "guideline": "Must equal the arithmetic sum of all line_item net amounts calculated as  before tax and before invoice-level adjustments. Decimal precision must comply with invoice_currency minor unit rules and statutory rounding regulations . Systems must enforce reconciliation between subtotal and the aggregated net line values. Any discrepancy must trigger validation errors. Subtotal must be expressed exclusively in invoice_currency. Post-issuance modification requires formal credit/debit adjustment in accordance with regulatory compliance requirements.",
+"multiple": false
+},
+{
+  "id": "total_tax_amount",
+  "name": "Total Tax Amount",
+ 
+  "type": "Number ",
+  "description": "The aggregate monetary value of all indirect tax components applied to the invoice across all line items and tax categories. This amount represents the seller’s total statutory tax liability arising from the transaction prior to withholding adjustments. It serves as the authoritative fiscal total used for regulatory reporting, VAT/GST return preparation, clearance-model validation, ERP tax engine reconciliation, and financial statement recognition in multinational B2B transactions.",
+  "guideline": "Must equal the sum of all tax_breakup.tax_amount entries and must reconcile with the aggregated sum of line_item_tax_amount values where tax is calculated at line level. Decimal precision must comply with invoice_currency minor unit standards and statutory rounding rules applicable to country_of_issue. Systems must enforce strict reconciliation validation between line-level tax calculations, tax category aggregation, and invoice-level total. Any discrepancy must trigger validation errors. The total_tax_amount must be expressed exclusively in invoice_currency. Post-issuance modification requires formal adjustment via credit or debit note in compliance with regulatory correction procedures."
+},
+ {
+  "id": "grand_total",
+  "name": "Grand Total",
+ 
+  "type": "Number ",
+  "description": "The final legally payable monetary amount due from the buyer under the invoice. This amount represents the complete financial obligation arising from the transaction after applying subtotal, taxes, discounts, surcharges, freight, insurance, withholding adjustments, and any statutory rounding rules. The grand_total serves as the authoritative settlement value used for payment processing, accounts receivable recognition, treasury execution, regulatory validation, and audit verification in multinational B2B environments.",
+  "guideline": "Must be expressed in invoice_currency and comply with applicable minor unit precision and statutory rounding rules. At a minimum, must equal subtotal + total_tax_amount where no additional monetary adjustments apply. In enterprise-grade implementations, grand_total must reconcile with the full monetary formula including invoice-level discounts, surcharges, freight, insurance, withholding tax deductions, and rounding adjustments where applicable. Systems must enforce strict reconciliation validation across all monetary components. Any discrepancy must trigger validation errors. Post-issuance modification requires formal correction through legally recognized adjustment documents ."
+},
+{
+  "id": "payment_method",
+  "name": "Payment Method",
+ 
+  "type": "Text ",
+  "description": "The standardized classification of the agreed settlement mechanism by which the buyer will discharge the financial obligation under the invoice. This field governs treasury execution, settlement routing, banking requirements, fraud prevention controls, regulatory reporting obligations, and reconciliation workflows. In multinational B2B transactions, the payment_method determines the operational payment rail , applicable compliance checks , settlement timelines, transaction fees, and documentary requirements.",
+  "guideline": "Must use a controlled, standardized enumeration aligned with international payment classification frameworks where possible . Free-text values are discouraged in production environments. The selected payment_method must align with contractual payment_terms and trigger validation logic for required banking or mandate data. For bank-based methods, seller_bank_details must be present. For direct debit, mandate reference details should be captured. For cross-border payments, SWIFT/BIC and IBAN validation may be required. Systems must enforce logical consistency between payment_method, currency, and jurisdictional restrictions. Post-issuance modification must be audit logged."
+},
+ {
+  "id": "payment_terms",
+  "name": "Payment Terms",
+ 
+  "type": "Text ",
+  "description": "The contractually agreed settlement conditions governing the timing, discount eligibility, installment arrangements, credit period, and penalty provisions applicable to the invoice. This field defines the legally enforceable commercial framework under which the buyer is obligated to discharge payment and may include net payment periods, early payment discounts, milestone schedules, advance payment conditions, retention clauses, or statutory compliance constraints.",
+  "guideline": "Must align with the governing contract, purchase order, or master service agreement between the parties. Where possible, use structured or standardized payment term codes  instead of free text. The payment_terms must logically determine due_date and any applicable early payment discount calculations. Systems must validate that payment terms comply with statutory regulations in country_of_issue, including maximum allowable commercial credit periods where applicable. Changes after invoice issuance must require documented contractual amendment and audit logging."
+},
+ {
+  "id": "e_invoice_compliance",
+  "name": "E-Invoice Compliance Details",
+ 
+  "type": "Nested object",
+  "description": "A structured object capturing all government-mandated electronic invoicing registration, validation, clearance, and cryptographic authentication attributes required under applicable e-invoicing regimes. This object ensures legal validity, regulatory recognition, anti-fraud compliance, and interoperability with national tax authority platforms in jurisdictions implementing clearance-model or reporting-model electronic invoicing frameworks.",
+  "guideline": "Mandatory in jurisdictions with electronic invoicing mandates. All fields must strictly align with the tax authority's official electronic invoice schema and API specifications. Values must match government-issued records and must not be altered after clearance approval. Systems must maintain audit logs of submission timestamps, response payloads, and status transitions. Where electronic clearance is required prior to invoice issuance, the invoice must not be considered legally valid until clearance_status indicates approval.",
+  "multiple": false,
+  "subFields": [
+    {
+      "id": "government_invoice_id",
+      "name": "Government Invoice ID",
+     
+      "type": "Text",
+      "description": "The official invoice registration number or reference ID assigned by the national tax authority upon successful submission or clearance of the electronic invoice.",
+      "guideline": "Must exactly match the identifier returned by the tax authority portal or API. Required in clearance-model jurisdictions. This identifier establishes legal enforceability and must be retained for statutory audit periods.",
+      "multiple": false
+    },
+    {
+      "id": "invoice_uuid",
+      "name": "Invoice UUID",
+     
+      "type": "Text",
+      "description": "A globally unique invoice identifier generated by the e-invoice platform or government system to uniquely track the invoice within national electronic validation infrastructure.",
+      "guideline": "Must conform to UUID format . Must be immutable after issuance. In some jurisdictions, this UUID is used for QR generation and digital validation.",
+      "multiple": false
+    },
+    {
+      "id": "qr_code_data",
+      "name": "QR Code Data",
+     
+      "type": "Text",
+      "description": "The encoded data payload embedded in the invoice QR code for digital verification by tax authorities, auditors, or customers. Typically includes seller ID, invoice number, date, total amount, tax amount, and cryptographic hash.",
+      "guideline": "Must comply with jurisdiction-specific QR data structure and encoding standards. The encoded content must match government-approved format and should be tamper-evident. Systems must prevent manual alteration.",
+      "multiple": false
+    },
+    {
+      "id": "digital_signature",
+      "name": "Digital Signature",
+     
+      "type": "Text",
+      "description": "A cryptographic signature applied to the invoice data to guarantee authenticity, integrity, and non-repudiation under national digital signature legislation.",
+      "guideline": "Must comply with national digital signature standards and certificate authority requirements. The signature must be verifiable against authorized public keys and must ensure that invoice data has not been altered post-clearance.",
+      "multiple": false
+    },
+    {
+      "id": "clearance_status",
+      "name": "Clearance Status",
+     
+      "type": "Text",
+      "description": "The real-time validation status returned by the tax authority upon submission of the electronic invoice.",
+      "guideline": "Must use standardized values such as APPROVED, REJECTED, PENDING, CANCELLED, or AMENDED. Invoice must not be considered legally valid until clearance_status = APPROVED in clearance-model jurisdictions. Status transitions must be audit logged.",
+      "multiple": false
+    }
+  ]
+}
+]
